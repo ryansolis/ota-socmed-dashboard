@@ -352,13 +352,38 @@ npm run cypress:run
 
 E2E tests are located in `cypress/e2e/`.
 
-**Note**: For E2E tests that require authentication, set these environment variables:
-```env
-CYPRESS_TEST_EMAIL=test@example.com
-CYPRESS_TEST_PASSWORD=test-password
+**Setting Up Test Credentials:**
+
+For E2E tests that require authentication, you need to create a test user in Supabase and set environment variables.
+
+**Option 1: Create Test User Manually**
+1. Go to your Supabase project → Authentication → Users
+2. Create a new user with email and password
+3. Set environment variables:
+   ```bash
+   # In .env.local or CI/CD environment
+   CYPRESS_TEST_EMAIL=your-test-user@example.com
+   CYPRESS_TEST_PASSWORD=your-test-password
+   ```
+
+**Option 2: Create Test User Programmatically**
+The test user should already exist if you've run the seed script. The seed data includes:
+- `admin@ota-socmed.com` (User A)
+- `solis.rayanthony@gmail.com` (User B)
+
+You can use either of these, or create a dedicated test user.
+
+**Running Tests:**
+```bash
+# With credentials set
+CYPRESS_TEST_EMAIL=test@example.com CYPRESS_TEST_PASSWORD=password npm run cypress:run
+
+# Or set in .env.local
+# Cypress automatically reads CYPRESS_* prefixed environment variables
 ```
 
-Or add them as GitHub Secrets (`CYPRESS_TEST_EMAIL`, `CYPRESS_TEST_PASSWORD`) for CI/CD.
+**For CI/CD:**
+Add `CYPRESS_TEST_EMAIL` and `CYPRESS_TEST_PASSWORD` as GitHub Secrets to enable full authenticated test suite.
 
 ## What I'd Improve with More Time
 

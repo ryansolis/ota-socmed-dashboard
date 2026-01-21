@@ -1,0 +1,13 @@
+{
+  "testUser": {
+    "email": "test@ota-socmed.com",
+    "password": "TestPassword123!",
+    "description": "Primary test user for E2E tests"
+  },
+  "testUser2": {
+    "email": "test2@ota-socmed.com",
+    "password": "TestPassword123!",
+    "description": "Secondary test user for multi-user tests"
+  }
+}
+

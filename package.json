@@ -59,6 +59,7 @@
     "eslint": "^8.56.0",
     "eslint-config-next": "^15.0.0",
     "@eslint/eslintrc": "^3.1.0",
+    "dotenv": "^16.4.1",
     "@tanstack/react-query-devtools": "^5.17.0",
     "vitest": "^1.1.0",
     "@vitest/ui": "^1.1.0",
