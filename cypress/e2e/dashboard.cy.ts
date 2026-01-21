@@ -61,9 +61,14 @@ describe("Dashboard", () => {
   it("should filter posts by platform", () => {
     cy.wait(2000)
     
-    // Click platform filter (assuming it's a select/dropdown)
-    // This depends on your actual UI implementation
-    cy.get('[data-testid="platform-filter"]', { timeout: 5000 }).should("exist").or("contain", "All")
+    // Check platform filter exists
+    cy.get('[data-testid="platform-filter"]', { timeout: 5000 }).should("exist")
+    
+    // Verify filter dropdown can be opened
+    cy.get('[data-testid="platform-filter"]').click()
+    cy.contains("All Platforms").should("be.visible")
+    cy.contains("Instagram").should("be.visible")
+    cy.contains("TikTok").should("be.visible")
   })
 
   it("should show empty state when no posts exist", () => {

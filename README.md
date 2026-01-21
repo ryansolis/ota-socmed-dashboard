@@ -257,15 +257,58 @@ The 7-Day Trend compares engagement from the last 7 days against the previous 7 
 
 ### Vercel Deployment
 
-1. Push code to GitHub repository
-2. Import project in Vercel dashboard
-3. Configure environment variables:
-   - `NEXT_PUBLIC_SUPABASE_URL`
-   - `NEXT_PUBLIC_SUPABASE_ANON_KEY`
-   - `SUPABASE_SERVICE_ROLE_KEY`
-   - `UPSTASH_REDIS_REST_URL`
-   - `UPSTASH_REDIS_REST_TOKEN`
-4. Deploy
+1. **Push code to GitHub repository**
+   - Ensure your code is pushed to a GitHub repository
+
+2. **Import project in Vercel**
+   - Go to [Vercel Dashboard](https://vercel.com/dashboard)
+   - Click "Add New..." → "Project"
+   - Import your GitHub repository
+   - Vercel will auto-detect Next.js and configure the build settings
+
+3. **Configure Environment Variables**
+   
+   In your Vercel project dashboard:
+   - Navigate to **Settings** → **Environment Variables**
+   - Add each of the following variables:
+   
+   **Required for Production:**
+   ```
+   NEXT_PUBLIC_SUPABASE_URL=your-production-supabase-url
+   NEXT_PUBLIC_SUPABASE_ANON_KEY=your-production-anon-key
+   SUPABASE_SERVICE_ROLE_KEY=your-production-service-role-key
+   UPSTASH_REDIS_REST_URL=your-upstash-redis-rest-url
+   UPSTASH_REDIS_REST_TOKEN=your-upstash-redis-rest-token
+   ```
+   
+   **How to add environment variables:**
+   1. Click "Add New" button
+   2. Enter the variable name (e.g., `NEXT_PUBLIC_SUPABASE_URL`)
+   3. Enter the variable value
+   4. Select which environments to apply to:
+      - **Production**: Live production deployment
+      - **Preview**: Pull request preview deployments
+      - **Development**: Local development (rarely used in Vercel)
+   5. Click "Save"
+   
+   **Recommended:** Add variables to both **Production** and **Preview** environments for full functionality in PR previews.
+   
+   **Security Notes:**
+   - `SUPABASE_SERVICE_ROLE_KEY` is sensitive - never commit to git
+   - `UPSTASH_REDIS_REST_TOKEN` is sensitive - keep it secure
+   - Variables starting with `NEXT_PUBLIC_` are exposed to the browser
+   - Other variables are server-side only
+
+4. **Deploy**
+   - After adding environment variables, trigger a new deployment:
+     - Go to **Deployments** tab
+     - Click "Redeploy" on the latest deployment, or
+     - Push a new commit to trigger automatic deployment
+
+5. **Verify Deployment**
+   - Check the deployment logs for any errors
+   - Test the live application
+   - Verify authentication and API routes are working
 
 The application is ready for production deployment with proper environment variable configuration.
 

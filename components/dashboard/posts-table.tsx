@@ -244,7 +244,7 @@ export function PostsTable() {
           value={platformFilter}
           onValueChange={(value) => setPlatformFilter(value as PlatformFilter)}
         >
-          <SelectTrigger className="w-[180px]">
+          <SelectTrigger className="w-[180px]" data-testid="platform-filter">
             <SelectValue placeholder="Filter by platform" />
           </SelectTrigger>
           <SelectContent>
