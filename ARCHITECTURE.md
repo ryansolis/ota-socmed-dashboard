@@ -171,65 +171,105 @@ graph LR
 ## Feature Breakdown Diagram
 
 ```mermaid
-mindmap
-    root((Social Media<br/>Analytics<br/>Dashboard))
-        Core Features
-            Authentication
-                Email/Password Login
-                Sign Up
-                Session Management
-                Protected Routes
-            Posts Table
-                Sortable Columns
-                Platform Filtering
-                Loading States
-                Empty States
-                Responsive Design
-            Engagement Chart
-                Line Chart View
-                Area Chart View
-                Interactive Tooltips
-                Last 30 Days Data
-                Responsive Sizing
-            Summary Cards
-                Total Engagement
-                Average Engagement Rate
-                Top Performing Post
-                7-Day Trend Indicator
-            Post Detail Modal
-                Large Image Display
-                All Metrics
-                External Link
-                Keyboard Navigation
-                Focus Trap
-        Bonus Features
-            Advanced Charts
-                Visx Implementation
-                Custom Styling
-                Interactive Features
-            Animations
-                Framer Motion
-                Entrance/Exit Animations
-                Staggered Animations
-            Security
-                Rate Limiting
-                Redis/Upstash
-                Request Logging
-                Security Headers
-            Testing
-                Unit Tests (Vitest)
-                E2E Tests (Cypress)
-                Test Coverage
-            DevOps
-                CI/CD Pipeline
-                GitHub Actions
-                Automated Testing
-                Type Checking
-                Linting
-            Database
-                Helper Functions
-                Summary Function
-                Optimized Queries
+graph TB
+    Root[Social Media Analytics Dashboard]
+    
+    subgraph "Core Features"
+        Auth[Authentication]
+        PostsTable[Posts Table]
+        Chart[Engagement Chart]
+        Summary[Summary Cards]
+        Modal[Post Detail Modal]
+        
+        Auth --> Auth1[Email/Password Login]
+        Auth --> Auth2[Sign Up]
+        Auth --> Auth3[Session Management]
+        Auth --> Auth4[Protected Routes]
+        
+        PostsTable --> PT1[Sortable Columns]
+        PostsTable --> PT2[Platform Filtering]
+        PostsTable --> PT3[Loading States]
+        PostsTable --> PT4[Empty States]
+        PostsTable --> PT5[Responsive Design]
+        
+        Chart --> Ch1[Line Chart View]
+        Chart --> Ch2[Area Chart View]
+        Chart --> Ch3[Interactive Tooltips]
+        Chart --> Ch4[Last 30 Days Data]
+        Chart --> Ch5[Responsive Sizing]
+        
+        Summary --> Sum1[Total Engagement]
+        Summary --> Sum2[Average Engagement Rate]
+        Summary --> Sum3[Top Performing Post]
+        Summary --> Sum4[7-Day Trend Indicator]
+        
+        Modal --> Mod1[Large Image Display]
+        Modal --> Mod2[All Metrics]
+        Modal --> Mod3[External Link]
+        Modal --> Mod4[Keyboard Navigation]
+        Modal --> Mod5[Focus Trap]
+    end
+    
+    subgraph "Bonus Features"
+        AdvancedCharts[Advanced Charts - Visx]
+        Animations[Animations - Framer Motion]
+        Security[Security Features]
+        Testing[Testing Framework]
+        DevOps[DevOps & CI/CD]
+        Database[Database Optimizations]
+        
+        AdvancedCharts --> AC1[Visx Implementation]
+        AdvancedCharts --> AC2[Custom Styling]
+        AdvancedCharts --> AC3[Interactive Features]
+        
+        Animations --> Anim1[Framer Motion]
+        Animations --> Anim2[Entrance/Exit Animations]
+        Animations --> Anim3[Staggered Animations]
+        
+        Security --> Sec1[Rate Limiting]
+        Security --> Sec2[Redis/Upstash]
+        Security --> Sec3[Request Logging]
+        Security --> Sec4[Security Headers]
+        
+        Testing --> Test1[Unit Tests - Vitest]
+        Testing --> Test2[E2E Tests - Cypress]
+        Testing --> Test3[Test Coverage]
+        
+        DevOps --> Dev1[CI/CD Pipeline]
+        DevOps --> Dev2[GitHub Actions]
+        DevOps --> Dev3[Automated Testing]
+        DevOps --> Dev4[Type Checking]
+        DevOps --> Dev5[Linting]
+        
+        Database --> DB1[Helper Functions]
+        Database --> DB2[Summary Function]
+        Database --> DB3[Optimized Queries]
+    end
+    
+    Root --> Auth
+    Root --> PostsTable
+    Root --> Chart
+    Root --> Summary
+    Root --> Modal
+    Root --> AdvancedCharts
+    Root --> Animations
+    Root --> Security
+    Root --> Testing
+    Root --> DevOps
+    Root --> Database
+    
+    style Root fill:#4f46e5,stroke:#312e81,stroke-width:3px,color:#fff
+    style Auth fill:#10b981,stroke:#047857,stroke-width:2px,color:#fff
+    style PostsTable fill:#10b981,stroke:#047857,stroke-width:2px,color:#fff
+    style Chart fill:#10b981,stroke:#047857,stroke-width:2px,color:#fff
+    style Summary fill:#10b981,stroke:#047857,stroke-width:2px,color:#fff
+    style Modal fill:#10b981,stroke:#047857,stroke-width:2px,color:#fff
+    style AdvancedCharts fill:#f59e0b,stroke:#b45309,stroke-width:2px,color:#fff
+    style Animations fill:#f59e0b,stroke:#b45309,stroke-width:2px,color:#fff
+    style Security fill:#f59e0b,stroke:#b45309,stroke-width:2px,color:#fff
+    style Testing fill:#f59e0b,stroke:#b45309,stroke-width:2px,color:#fff
+    style DevOps fill:#f59e0b,stroke:#b45309,stroke-width:2px,color:#fff
+    style Database fill:#f59e0b,stroke:#b45309,stroke-width:2px,color:#fff
 ```
 
 ## Data Flow Diagram
