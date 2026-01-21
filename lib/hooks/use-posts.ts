@@ -32,7 +32,7 @@ export function usePosts(options: UsePostsOptions = {}) {
   const { platform = "all", enabled = true } = options
 
   return useQuery({
-    queryKey: queryKeys.posts.list(platform !== "all" ? platform : undefined),
+    queryKey: queryKeys.posts.list(platform !== "all" ? { platform } : undefined),
     queryFn: async () => {
       const supabase = createClient()
 
