@@ -6,7 +6,7 @@ import { QueryProvider } from "@/components/providers/query-provider";
 const inter = Inter({ subsets: ["latin"] });
 
 export const metadata: Metadata = {
-  title: "Social Media Analytics Dashboard",
+  title: "OneTeamAnywhere - Analytics Dashboard",
   description: "Track and analyze your social media engagement metrics",
 };
 
