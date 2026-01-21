@@ -7,14 +7,21 @@
     "build": "next build",
     "start": "next start",
     "lint": "next lint",
-    "type-check": "tsc --noEmit"
+    "type-check": "tsc --noEmit",
+    "test": "vitest run",
+    "test:watch": "vitest",
+    "test:ui": "vitest --ui",
+    "test:coverage": "vitest run --coverage",
+    "cypress:open": "cypress open",
+    "cypress:run": "cypress run",
+    "test:e2e": "cypress run"
   },
   "dependencies": {
     "next": "^15.0.0",
     "react": "^18.2.0",
     "react-dom": "^18.2.0",
     "@supabase/supabase-js": "^2.39.0",
-    "@supabase/ssr": "^0.1.0",
+    "@supabase/ssr": "^0.5.0",
     "zustand": "^4.4.7",
     "@tanstack/react-query": "^5.17.0",
     "@tanstack/react-table": "^8.11.8",
@@ -37,7 +44,8 @@
     "@radix-ui/react-dialog": "^1.0.5",
     "@radix-ui/react-select": "^2.0.0",
     "@radix-ui/react-slot": "^1.0.2",
-    "tailwindcss-animate": "^1.0.7"
+    "tailwindcss-animate": "^1.0.7",
+    "@upstash/redis": "^1.32.0"
   },
   "devDependencies": {
     "typescript": "^5.3.3",
@@ -49,6 +57,15 @@
     "tailwindcss": "^3.4.0",
     "eslint": "^8.56.0",
     "eslint-config-next": "^15.0.0",
-    "@tanstack/react-query-devtools": "^5.17.0"
+    "@tanstack/react-query-devtools": "^5.17.0",
+    "vitest": "^1.1.0",
+    "@vitest/ui": "^1.1.0",
+    "@testing-library/react": "^14.1.2",
+    "@testing-library/jest-dom": "^6.1.5",
+    "@testing-library/user-event": "^14.5.1",
+    "@vitejs/plugin-react": "^4.2.1",
+    "jsdom": "^23.0.1",
+    "cypress": "^13.6.1",
+    "@vitest/coverage-v8": "^1.1.0"
   }
 }

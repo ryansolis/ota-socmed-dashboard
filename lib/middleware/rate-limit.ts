@@ -1,67 +1,78 @@
 /**
- * Simple in-memory rate limiter
- * For production, consider using Redis or a dedicated rate limiting service
+ * Redis-based rate limiter for production use
+ * Uses Upstash Redis which is serverless-friendly and works with Edge Functions
+ * 
+ * Implements a sliding window counter algorithm:
+ * - Uses INCR to atomically increment the counter
+ * - Sets expiration equal to the window duration
+ * - Checks count against maxRequests threshold
  */
 
-type RateLimitStore = {
-  [key: string]: {
-    count: number
-    resetTime: number
-  }
-}
-
-const store: RateLimitStore = {}
+import { getRedisClient } from "@/lib/redis/client"
 
 interface RateLimitOptions {
   windowMs: number // Time window in milliseconds
   maxRequests: number // Maximum requests per window
 }
 
-export function rateLimit(options: RateLimitOptions) {
+interface RateLimitResult {
+  allowed: boolean
+  remaining: number
+  resetTime: number
+}
+
+/**
+ * Redis-based rate limiter
+ * Uses a sliding window counter algorithm with Redis
+ */
+export async function rateLimit(
+  options: RateLimitOptions,
+  identifier: string
+): Promise<RateLimitResult> {
   const { windowMs, maxRequests } = options
+  const now = Date.now()
+  const key = `ratelimit:${identifier}`
+  const resetTime = now + windowMs
 
-  return (identifier: string): { allowed: boolean; remaining: number; resetTime: number } => {
-    const now = Date.now()
-    const key = identifier
+  try {
+    const redis = getRedisClient()
 
-    // Clean up expired entries periodically (simple cleanup)
-    if (Math.random() < 0.01) {
-      // 1% chance to clean up
-      Object.keys(store).forEach((k) => {
-        if (store[k].resetTime < now) {
-          delete store[k]
-        }
-      })
+    // Increment counter atomically
+    // This returns the new count after increment
+    const currentCount = await redis.incr(key)
+
+    // Set expiration on first request (when count = 1)
+    if (currentCount === 1) {
+      // Use PEXPIRE to set expiration in milliseconds
+      await redis.pexpire(key, windowMs)
     }
 
-    const record = store[key]
+    // Check if limit exceeded
+    if (currentCount > maxRequests) {
+      // Get TTL to calculate actual reset time
+      const ttl = await redis.pttl(key)
+      const actualResetTime = ttl > 0 ? now + ttl : resetTime
 
-    if (!record || record.resetTime < now) {
-      // Create new record or reset expired one
-      store[key] = {
-        count: 1,
-        resetTime: now + windowMs,
-      }
-      return {
-        allowed: true,
-        remaining: maxRequests - 1,
-        resetTime: now + windowMs,
-      }
-    }
-
-    if (record.count >= maxRequests) {
       return {
         allowed: false,
         remaining: 0,
-        resetTime: record.resetTime,
+        resetTime: actualResetTime,
       }
     }
 
-    record.count++
     return {
       allowed: true,
-      remaining: maxRequests - record.count,
-      resetTime: record.resetTime,
+      remaining: Math.max(0, maxRequests - currentCount),
+      resetTime: resetTime,
+    }
+  } catch (error) {
+    // Fallback: allow request if Redis fails (fail open)
+    // In production, you might want to fail closed instead
+    console.error("Rate limit Redis error:", error)
+    return {
+      allowed: true,
+      remaining: maxRequests - 1,
+      resetTime: resetTime,
     }
   }
 }

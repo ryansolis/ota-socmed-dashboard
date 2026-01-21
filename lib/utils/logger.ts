@@ -25,14 +25,16 @@ class Logger {
     // For now, we'll use console with structured format
     if (process.env.NODE_ENV === "production") {
       // In production, log as JSON for log aggregation services
-      console.log(JSON.stringify(entry))
+      const logMethod = level === "error" ? console.error : level === "warn" ? console.warn : console.log
+      logMethod(JSON.stringify(entry))
     } else {
       // In development, use formatted console logs
       const prefix = `[${entry.timestamp}] [${level.toUpperCase()}]`
+      const logMethod = level === "error" ? console.error : level === "warn" ? console.warn : console.log
       if (metadata) {
-        console.log(prefix, message, metadata)
+        logMethod(prefix, message, metadata)
       } else {
-        console.log(prefix, message)
+        logMethod(prefix, message)
       }
     }
   }

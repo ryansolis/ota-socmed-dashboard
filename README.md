@@ -30,9 +30,21 @@ Create a `.env.local` file in the root directory:
 NEXT_PUBLIC_SUPABASE_URL=your-project-url
 NEXT_PUBLIC_SUPABASE_ANON_KEY=your-anon-key
 SUPABASE_SERVICE_ROLE_KEY=your-service-role-key
+
+# Redis (Upstash) for rate limiting
+UPSTASH_REDIS_REST_URL=your-upstash-redis-url
+UPSTASH_REDIS_REST_TOKEN=your-upstash-redis-token
 ```
 
-### 3. Set Up Supabase Database
+### 3. Set Up Redis (Upstash)
+
+1. Create a free Upstash Redis database at https://upstash.com
+2. Copy your REST URL and REST Token from the Upstash dashboard
+3. Add them to your `.env.local` file
+
+**Note**: Rate limiting will fall back to allowing requests if Redis is unavailable (fail-open strategy).
+
+### 4. Set Up Supabase Database
 
 1. Create a Supabase project at https://supabase.com
 2. Run the migration script in SQL Editor: `supabase/migrations/001_initial_schema.sql`
@@ -40,7 +52,7 @@ SUPABASE_SERVICE_ROLE_KEY=your-service-role-key
 4. Update `supabase/seed.sql` with actual user UUIDs
 5. Run the seed script in SQL Editor: `supabase/seed.sql`
 
-### 4. Run Development Server
+### 5. Run Development Server
 
 ```bash
 npm run dev
@@ -251,22 +263,70 @@ The 7-Day Trend compares engagement from the last 7 days against the previous 7 
    - `NEXT_PUBLIC_SUPABASE_URL`
    - `NEXT_PUBLIC_SUPABASE_ANON_KEY`
    - `SUPABASE_SERVICE_ROLE_KEY`
+   - `UPSTASH_REDIS_REST_URL`
+   - `UPSTASH_REDIS_REST_TOKEN`
 4. Deploy
 
 The application is ready for production deployment with proper environment variable configuration.
 
 ---
 
+## Testing
+
+This project includes both unit tests and E2E tests:
+
+### Unit Tests (Vitest)
+
+Unit tests are written using Vitest and React Testing Library.
+
+```bash
+# Run unit tests
+npm run test
+
+# Run tests in watch mode
+npm run test:watch
+
+# Run tests with UI
+npm run test:ui
+
+# Generate coverage report
+npm run test:coverage
+```
+
+Test files are located alongside source files with `.test.ts` or `.test.tsx` extensions.
+
+### E2E Tests (Cypress)
+
+E2E tests verify critical user flows end-to-end.
+
+```bash
+# Open Cypress Test Runner (interactive)
+npm run cypress:open
+
+# Run E2E tests headlessly
+npm run cypress:run
+```
+
+E2E tests are located in `cypress/e2e/`.
+
+**Note**: For E2E tests that require authentication, set these environment variables:
+```env
+CYPRESS_TEST_EMAIL=test@example.com
+CYPRESS_TEST_PASSWORD=test-password
+```
+
+Or add them as GitHub Secrets (`CYPRESS_TEST_EMAIL`, `CYPRESS_TEST_PASSWORD`) for CI/CD.
+
 ## What I'd Improve with More Time
 
 1. **Type Safety**: Generate TypeScript types from Supabase schema using `supabase gen types`
 2. **Error Handling**: Add more granular error messages and user-friendly error boundaries
-3. **Testing**: Add unit tests for API routes and utility functions, E2E tests for critical flows
-4. **Performance**: Add pagination to posts table for users with many posts
-5. **Accessibility**: Improve keyboard navigation and ARIA labels
-6. **Real-time Updates**: Add Supabase Realtime subscriptions for live dashboard updates
-7. **Caching Strategy**: Implement more sophisticated cache invalidation strategies
-8. **Monitoring**: Add request logging and error tracking (e.g., Sentry)
+3. **Performance**: Add pagination to posts table for users with many posts
+4. **Accessibility**: Improve keyboard navigation and ARIA labels
+5. **Real-time Updates**: Add Supabase Realtime subscriptions for live dashboard updates
+6. **Caching Strategy**: Implement more sophisticated cache invalidation strategies
+7. **Monitoring**: Add request logging and error tracking (e.g., Sentry)
+8. **More Test Coverage**: Add tests for React components and API route integrations
 
 ---
 

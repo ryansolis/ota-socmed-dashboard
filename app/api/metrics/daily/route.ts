@@ -6,10 +6,10 @@ import { logger } from "@/lib/utils/logger"
 export const runtime = "edge"
 
 // Rate limiter: 100 requests per 15 minutes per IP
-const limiter = rateLimit({
+const rateLimitOptions = {
   windowMs: 15 * 60 * 1000, // 15 minutes
   maxRequests: 100,
-})
+}
 
 export async function GET(request: Request) {
   const startTime = Date.now()
@@ -17,7 +17,7 @@ export async function GET(request: Request) {
   try {
     // Rate limiting
     const identifier = getRateLimitIdentifier(request)
-    const limitResult = limiter(identifier)
+    const limitResult = await rateLimit(rateLimitOptions, identifier)
 
     if (!limitResult.allowed) {
       const duration = Date.now() - startTime
