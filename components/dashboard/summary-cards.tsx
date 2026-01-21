@@ -3,7 +3,7 @@
 import { useAnalyticsSummary } from "@/lib/hooks/use-analytics-summary"
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
 import { Skeleton } from "@/components/ui/skeleton"
-import { ArrowUp, ArrowDown, TrendingUp, BarChart3, Heart, MessageSquare } from "lucide-react"
+import { ArrowUp, ArrowDown, TrendingUp, BarChart3, Heart } from "lucide-react"
 
 function formatNumber(num: number): string {
   if (num >= 1000000) {

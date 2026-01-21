@@ -9,7 +9,7 @@ import {
   DialogHeader,
   DialogTitle,
 } from "@/components/ui/dialog"
-import { motion } from "framer-motion"
+import { motion, AnimatePresence } from "framer-motion"
 import { Skeleton } from "@/components/ui/skeleton"
 import { Button } from "@/components/ui/button"
 import { ExternalLink, Heart, MessageSquare, Share2, Bookmark, Eye, BarChart3, TrendingUp } from "lucide-react"
@@ -65,18 +65,22 @@ export function PostDetailModal() {
             <p className="text-sm text-muted-foreground">No post selected</p>
           </div>
         ) : (
-          <motion.div
-            initial={{ opacity: 0, y: 20 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ delay: 0.1, duration: 0.3 }}
-            className="space-y-6"
-          >
+          <AnimatePresence mode="wait">
+            <motion.div
+              key="modal-content"
+              initial={{ opacity: 0, y: 20 }}
+              animate={{ opacity: 1, y: 0 }}
+              exit={{ opacity: 0, y: -20 }}
+              transition={{ delay: 0.1, duration: 0.3, ease: "easeOut" }}
+              className="space-y-6"
+            >
             {/* Post Image */}
             {post.thumbnail_url && (
               <motion.div
                 initial={{ opacity: 0, scale: 0.95 }}
                 animate={{ opacity: 1, scale: 1 }}
-                transition={{ delay: 0.15, duration: 0.3 }}
+                exit={{ opacity: 0, scale: 0.95 }}
+                transition={{ delay: 0.15, duration: 0.3, ease: "easeOut" }}
                 className="relative aspect-square w-full rounded-lg overflow-hidden bg-muted"
               >
                 <Image
@@ -117,13 +121,15 @@ export function PostDetailModal() {
             <motion.div
               initial={{ opacity: 0 }}
               animate={{ opacity: 1 }}
-              transition={{ delay: 0.2, duration: 0.3 }}
+              exit={{ opacity: 0 }}
+              transition={{ delay: 0.2, duration: 0.3, ease: "easeOut" }}
               className="grid grid-cols-2 md:grid-cols-4 gap-4"
             >
               <motion.div
                 initial={{ opacity: 0, y: 10 }}
                 animate={{ opacity: 1, y: 0 }}
-                transition={{ delay: 0.25, duration: 0.2 }}
+                exit={{ opacity: 0, y: -10 }}
+                transition={{ delay: 0.25, duration: 0.2, ease: "easeOut" }}
                 className="p-4 rounded-lg border bg-muted/50"
               >
                 <div className="flex items-center gap-2 mb-2">
@@ -136,7 +142,8 @@ export function PostDetailModal() {
               <motion.div
                 initial={{ opacity: 0, y: 10 }}
                 animate={{ opacity: 1, y: 0 }}
-                transition={{ delay: 0.3, duration: 0.2 }}
+                exit={{ opacity: 0, y: -10 }}
+                transition={{ delay: 0.3, duration: 0.2, ease: "easeOut" }}
                 className="p-4 rounded-lg border bg-muted/50"
               >
                 <div className="flex items-center gap-2 mb-2">
@@ -149,7 +156,8 @@ export function PostDetailModal() {
               <motion.div
                 initial={{ opacity: 0, y: 10 }}
                 animate={{ opacity: 1, y: 0 }}
-                transition={{ delay: 0.35, duration: 0.2 }}
+                exit={{ opacity: 0, y: -10 }}
+                transition={{ delay: 0.35, duration: 0.2, ease: "easeOut" }}
                 className="p-4 rounded-lg border bg-muted/50"
               >
                 <div className="flex items-center gap-2 mb-2">
@@ -162,7 +170,8 @@ export function PostDetailModal() {
               <motion.div
                 initial={{ opacity: 0, y: 10 }}
                 animate={{ opacity: 1, y: 0 }}
-                transition={{ delay: 0.4, duration: 0.2 }}
+                exit={{ opacity: 0, y: -10 }}
+                transition={{ delay: 0.4, duration: 0.2, ease: "easeOut" }}
                 className="p-4 rounded-lg border bg-muted/50"
               >
                 <div className="flex items-center gap-2 mb-2">
@@ -226,7 +235,8 @@ export function PostDetailModal() {
                   </Button>
                 </div>
               )}
-          </motion.div>
+            </motion.div>
+          </AnimatePresence>
         )}
       </DialogContent>
     </Dialog>
