@@ -17,7 +17,7 @@ import {
   ResponsiveContainer,
   Legend,
 } from "recharts"
-import { ChartBar } from "lucide-react"
+import { BarChart3 } from "lucide-react"
 
 export function EngagementChart() {
   const chartViewType = useUIStore((state) => state.chartViewType)
@@ -83,7 +83,7 @@ export function EngagementChart() {
         ) : chartData.length === 0 ? (
           <div className="h-[400px] flex items-center justify-center text-muted-foreground">
             <div className="text-center">
-              <ChartBar className="h-12 w-12 mx-auto mb-2 opacity-50" />
+              <BarChart3 className="h-12 w-12 mx-auto mb-2 opacity-50" />
               <p>No data available</p>
             </div>
           </div>
