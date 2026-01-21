@@ -6,7 +6,7 @@ import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/com
 import { Button } from "@/components/ui/button"
 import { Skeleton } from "@/components/ui/skeleton"
 import { BarChart3 } from "lucide-react"
-import { useMemo } from "react"
+import { useMemo, useCallback, useState, useEffect, useRef } from "react"
 import { scaleTime, scaleLinear } from "@visx/scale"
 import { Group } from "@visx/group"
 import { AreaClosed, LinePath } from "@visx/shape"
@@ -16,7 +16,6 @@ import { defaultStyles, useTooltip, TooltipWithBounds } from "@visx/tooltip"
 import { bisector } from "d3-array"
 import { curveMonotoneX } from "@visx/curve"
 import { localPoint } from "@visx/event"
-import { useCallback } from "react"
 
 type TooltipData = {
   date: string
@@ -33,12 +32,41 @@ const bisectDate = bisector<DataPoint, Date>((d) => d.dateObj).left
 
 // Dimensions
 const defaultMargin = { top: 40, right: 40, bottom: 40, left: 60 }
+const chartHeight = 400
 
 export function EngagementChartVisx() {
   const chartViewType = useUIStore((state) => state.chartViewType)
   const setChartViewType = useUIStore((state) => state.setChartViewType)
 
   const { data: metrics, isLoading, error } = useDailyMetrics({ days: 30 })
+  
+  const containerRef = useRef<HTMLDivElement>(null)
+  const [containerWidth, setContainerWidth] = useState(1200)
+
+  // Make chart responsive to container width
+  useEffect(() => {
+    if (!containerRef.current) return
+
+    const updateWidth = () => {
+      if (containerRef.current) {
+        setContainerWidth(containerRef.current.offsetWidth)
+      }
+    }
+    
+    updateWidth()
+    
+    const resizeObserver = new ResizeObserver(updateWidth)
+    resizeObserver.observe(containerRef.current)
+    
+    window.addEventListener('resize', updateWidth)
+    return () => {
+      resizeObserver.disconnect()
+      window.removeEventListener('resize', updateWidth)
+    }
+  }, [])
+  
+  const chartWidth = Math.max(containerWidth, 800) // Minimum 800px
+  const innerWidth = chartWidth - defaultMargin.left - defaultMargin.right
 
   const {
     tooltipData,
@@ -72,9 +100,9 @@ export function EngagementChartVisx() {
               chartData[chartData.length - 1].dateObj,
             ]
           : [new Date(), new Date()],
-        range: [0, 800],
+        range: [0, innerWidth],
       }),
-    [chartData]
+    [chartData, innerWidth]
   )
 
   const yScale = useMemo(
@@ -83,7 +111,7 @@ export function EngagementChartVisx() {
         domain: chartData.length
           ? [0, Math.max(...chartData.map((d) => d.engagement)) * 1.1]
           : [0, 100],
-        range: [400, 0],
+        range: [chartHeight, 0],
       }),
     [chartData]
   )
@@ -193,21 +221,21 @@ export function EngagementChartVisx() {
         </div>
       </CardHeader>
       <CardContent>
-        <div className="h-[400px] w-full relative">
-          <svg width="100%" height="100%" viewBox="0 0 880 480">
+        <div ref={containerRef} className="w-full relative">
+          <svg width="100%" height={chartHeight} viewBox={`0 0 ${chartWidth} ${chartHeight + defaultMargin.top + defaultMargin.bottom}`}>
             <Group left={defaultMargin.left} top={defaultMargin.top}>
               {/* Grid */}
               <GridRows
                 scale={yScale}
-                width={800}
-                height={400}
+                width={innerWidth}
+                height={chartHeight}
                 strokeDasharray="3 3"
                 stroke="#e5e7eb"
               />
               <GridColumns
                 scale={xScale}
-                width={800}
-                height={400}
+                width={innerWidth}
+                height={chartHeight}
                 strokeDasharray="3 3"
                 stroke="#e5e7eb"
               />
@@ -235,13 +263,13 @@ export function EngagementChartVisx() {
               )}
 
               {/* Tooltip indicator line */}
-              {tooltipOpen && tooltipData && tooltipLeft && (
+              {tooltipOpen && tooltipData && tooltipLeft && tooltipTop && (
                 <Group>
                   <line
                     x1={tooltipLeft}
                     y1={0}
                     x2={tooltipLeft}
-                    y2={400}
+                    y2={chartHeight}
                     stroke="#8884d8"
                     strokeWidth={2}
                     strokeDasharray="5 5"
@@ -262,8 +290,8 @@ export function EngagementChartVisx() {
               <rect
                 x={0}
                 y={0}
-                width={800}
-                height={400}
+                width={innerWidth}
+                height={chartHeight}
                 fill="transparent"
                 onTouchStart={handleTooltip}
                 onTouchMove={handleTooltip}
@@ -273,9 +301,9 @@ export function EngagementChartVisx() {
 
               {/* Axes */}
               <AxisBottom
-                top={400}
+                top={chartHeight}
                 scale={xScale}
-                numTicks={6}
+                numTicks={8}
                 stroke="#6b7280"
                 tickStroke="#6b7280"
                 tickLabelProps={{
