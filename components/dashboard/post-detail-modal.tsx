@@ -9,6 +9,7 @@ import {
   DialogHeader,
   DialogTitle,
 } from "@/components/ui/dialog"
+import { motion } from "framer-motion"
 import { Skeleton } from "@/components/ui/skeleton"
 import { Button } from "@/components/ui/button"
 import { ExternalLink, Heart, MessageSquare, Share2, Bookmark, Eye, BarChart3, TrendingUp } from "lucide-react"
@@ -44,7 +45,9 @@ export function PostDetailModal() {
       <DialogContent className="max-w-2xl max-h-[90vh] overflow-y-auto">
         <DialogHeader>
           <DialogTitle>Post Details</DialogTitle>
-          <DialogDescription>View detailed analytics for this post</DialogDescription>
+          <DialogDescription>
+            View detailed analytics for this post
+          </DialogDescription>
         </DialogHeader>
 
         {isLoading ? (
@@ -62,10 +65,20 @@ export function PostDetailModal() {
             <p className="text-sm text-muted-foreground">No post selected</p>
           </div>
         ) : (
-          <div className="space-y-6">
+          <motion.div
+            initial={{ opacity: 0, y: 20 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ delay: 0.1, duration: 0.3 }}
+            className="space-y-6"
+          >
             {/* Post Image */}
             {post.thumbnail_url && (
-              <div className="relative aspect-square w-full rounded-lg overflow-hidden bg-muted">
+              <motion.div
+                initial={{ opacity: 0, scale: 0.95 }}
+                animate={{ opacity: 1, scale: 1 }}
+                transition={{ delay: 0.15, duration: 0.3 }}
+                className="relative aspect-square w-full rounded-lg overflow-hidden bg-muted"
+              >
                 <Image
                   src={post.thumbnail_url}
                   alt={post.caption || "Post image"}
@@ -73,7 +86,7 @@ export function PostDetailModal() {
                   className="object-cover"
                   unoptimized
                 />
-              </div>
+              </motion.div>
             )}
 
             {/* Post Info */}
@@ -101,39 +114,64 @@ export function PostDetailModal() {
             </div>
 
             {/* Metrics Grid */}
-            <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
-              <div className="p-4 rounded-lg border bg-muted/50">
+            <motion.div
+              initial={{ opacity: 0 }}
+              animate={{ opacity: 1 }}
+              transition={{ delay: 0.2, duration: 0.3 }}
+              className="grid grid-cols-2 md:grid-cols-4 gap-4"
+            >
+              <motion.div
+                initial={{ opacity: 0, y: 10 }}
+                animate={{ opacity: 1, y: 0 }}
+                transition={{ delay: 0.25, duration: 0.2 }}
+                className="p-4 rounded-lg border bg-muted/50"
+              >
                 <div className="flex items-center gap-2 mb-2">
                   <Heart className="h-4 w-4 text-red-500" />
                   <span className="text-sm font-medium">Likes</span>
                 </div>
                 <p className="text-2xl font-bold">{formatNumber(post.likes)}</p>
-              </div>
+              </motion.div>
 
-              <div className="p-4 rounded-lg border bg-muted/50">
+              <motion.div
+                initial={{ opacity: 0, y: 10 }}
+                animate={{ opacity: 1, y: 0 }}
+                transition={{ delay: 0.3, duration: 0.2 }}
+                className="p-4 rounded-lg border bg-muted/50"
+              >
                 <div className="flex items-center gap-2 mb-2">
                   <MessageSquare className="h-4 w-4 text-blue-500" />
                   <span className="text-sm font-medium">Comments</span>
                 </div>
                 <p className="text-2xl font-bold">{formatNumber(post.comments)}</p>
-              </div>
+              </motion.div>
 
-              <div className="p-4 rounded-lg border bg-muted/50">
+              <motion.div
+                initial={{ opacity: 0, y: 10 }}
+                animate={{ opacity: 1, y: 0 }}
+                transition={{ delay: 0.35, duration: 0.2 }}
+                className="p-4 rounded-lg border bg-muted/50"
+              >
                 <div className="flex items-center gap-2 mb-2">
                   <Share2 className="h-4 w-4 text-green-500" />
                   <span className="text-sm font-medium">Shares</span>
                 </div>
                 <p className="text-2xl font-bold">{formatNumber(post.shares)}</p>
-              </div>
+              </motion.div>
 
-              <div className="p-4 rounded-lg border bg-muted/50">
+              <motion.div
+                initial={{ opacity: 0, y: 10 }}
+                animate={{ opacity: 1, y: 0 }}
+                transition={{ delay: 0.4, duration: 0.2 }}
+                className="p-4 rounded-lg border bg-muted/50"
+              >
                 <div className="flex items-center gap-2 mb-2">
                   <Bookmark className="h-4 w-4 text-yellow-500" />
                   <span className="text-sm font-medium">Saves</span>
                 </div>
                 <p className="text-2xl font-bold">{formatNumber(post.saves)}</p>
-              </div>
-            </div>
+              </motion.div>
+            </motion.div>
 
             {/* Additional Metrics */}
             <div className="grid grid-cols-2 gap-4">
@@ -175,20 +213,20 @@ export function PostDetailModal() {
               </div>
             </div>
 
-            {/* External Link */}
-            {post.permalink && (
-              <div>
-                <Button
-                  variant="outline"
-                  className="w-full"
-                  onClick={() => window.open(post.permalink || "", "_blank")}
-                >
-                  <ExternalLink className="h-4 w-4 mr-2" />
-                  View on Platform
-                </Button>
-              </div>
-            )}
-          </div>
+              {/* External Link */}
+              {post.permalink && (
+                <div>
+                  <Button
+                    variant="outline"
+                    className="w-full"
+                    onClick={() => window.open(post.permalink || "", "_blank")}
+                  >
+                    <ExternalLink className="h-4 w-4 mr-2" />
+                    View on Platform
+                  </Button>
+                </div>
+              )}
+          </motion.div>
         )}
       </DialogContent>
     </Dialog>

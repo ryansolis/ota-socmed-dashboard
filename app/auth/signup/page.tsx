@@ -48,7 +48,11 @@ export default function SignupPage() {
       router.push("/dashboard")
       router.refresh()
     } catch (err) {
-      setError("An unexpected error occurred")
+      // Handle network/DNS errors more gracefully
+      const errorMessage = err instanceof Error && err.message.includes("fetch failed")
+        ? "Unable to connect to authentication service. Please check your internet connection."
+        : "An unexpected error occurred"
+      setError(errorMessage)
       setLoading(false)
     }
   }

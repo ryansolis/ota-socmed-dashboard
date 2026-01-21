@@ -1,9 +1,45 @@
 import { NextResponse } from "next/server"
 import { createClient } from "@/lib/supabase/server"
 import type { AnalyticsSummary } from "@/lib/hooks/use-analytics-summary"
+import { rateLimit, getRateLimitIdentifier } from "@/lib/middleware/rate-limit"
+import { logger } from "@/lib/utils/logger"
 
-export async function GET() {
+// Rate limiter: 100 requests per 15 minutes per IP
+const limiter = rateLimit({
+  windowMs: 15 * 60 * 1000, // 15 minutes
+  maxRequests: 100,
+})
+
+export async function GET(request: Request) {
+  const startTime = Date.now()
+  
   try {
+    // Rate limiting
+    const identifier = getRateLimitIdentifier(request)
+    const limitResult = limiter(identifier)
+
+    if (!limitResult.allowed) {
+      const duration = Date.now() - startTime
+      logger.warn("Rate limit exceeded", {
+        identifier,
+        path: "/api/analytics/summary",
+        duration: `${duration}ms`,
+      })
+      
+      return NextResponse.json(
+        { error: "Too many requests. Please try again later." },
+        {
+          status: 429,
+          headers: {
+            "Retry-After": Math.ceil((limitResult.resetTime - Date.now()) / 1000).toString(),
+            "X-RateLimit-Limit": "100",
+            "X-RateLimit-Remaining": limitResult.remaining.toString(),
+            "X-RateLimit-Reset": new Date(limitResult.resetTime).toISOString(),
+          },
+        }
+      )
+    }
+
     const supabase = await createClient()
 
     // Verify user is authenticated
@@ -124,9 +160,27 @@ export async function GET() {
       },
     }
 
-    return NextResponse.json(summary)
+    const duration = Date.now() - startTime
+    logger.request("GET", "/api/analytics/summary", 200, duration, {
+      userId: user.id,
+      postsCount: posts.length,
+    })
+    
+    const response = NextResponse.json(summary)
+    
+    // Add rate limit headers
+    response.headers.set("X-RateLimit-Limit", "100")
+    response.headers.set("X-RateLimit-Remaining", limitResult.remaining.toString())
+    response.headers.set("X-RateLimit-Reset", new Date(limitResult.resetTime).toISOString())
+    
+    return response
   } catch (error) {
-    console.error("Error in analytics summary:", error)
+    const duration = Date.now() - startTime
+    logger.error("Error in analytics summary", {
+      error: error instanceof Error ? error.message : String(error),
+      duration: `${duration}ms`,
+    })
+    
     return NextResponse.json(
       { error: "Internal server error" },
       { status: 500 }

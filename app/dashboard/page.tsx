@@ -2,7 +2,7 @@ import { redirect } from "next/navigation"
 import { createClient } from "@/lib/supabase/server"
 import { SummaryCards } from "@/components/dashboard/summary-cards"
 import { PostsTable } from "@/components/dashboard/posts-table"
-import { EngagementChart } from "@/components/dashboard/engagement-chart"
+import { EngagementChartVisx } from "@/components/dashboard/engagement-chart-visx"
 import { PostDetailModal } from "@/components/dashboard/post-detail-modal"
 
 export default async function DashboardPage() {
@@ -28,7 +28,7 @@ export default async function DashboardPage() {
       <SummaryCards />
 
       {/* Engagement Chart */}
-      <EngagementChart />
+      <EngagementChartVisx />
 
       {/* Posts Table */}
       <PostsTable />

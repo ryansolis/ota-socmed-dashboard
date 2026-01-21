@@ -53,7 +53,15 @@ export async function updateSession(request: NextRequest) {
   )
 
   // Refresh session if expired
-  await supabase.auth.getUser()
+  // Wrap in try-catch to prevent middleware failures from breaking the app
+  try {
+    await supabase.auth.getUser()
+  } catch (error) {
+    // Log error but don't break the request
+    // This can happen if Supabase is unreachable or DNS issues occur
+    console.error("Middleware: Failed to refresh session", error)
+    // Continue with the request anyway - auth will be checked in protected routes
+  }
 
   return supabaseResponse
 }

@@ -6,7 +6,8 @@
     "dev": "next dev",
     "build": "next build",
     "start": "next start",
-    "lint": "next lint"
+    "lint": "next lint",
+    "type-check": "tsc --noEmit"
   },
   "dependencies": {
     "next": "^15.0.0",
@@ -18,6 +19,17 @@
     "@tanstack/react-query": "^5.17.0",
     "@tanstack/react-table": "^8.11.8",
     "recharts": "^2.10.3",
+    "@visx/axis": "^3.8.0",
+    "@visx/curve": "^3.4.0",
+    "@visx/event": "^3.7.0",
+    "@visx/grid": "^3.5.0",
+    "@visx/group": "^3.7.0",
+    "@visx/responsive": "^3.8.0",
+    "@visx/scale": "^3.4.0",
+    "@visx/shape": "^3.7.0",
+    "@visx/tooltip": "^3.7.0",
+    "d3-array": "^3.2.4",
+    "framer-motion": "^11.0.5",
     "lucide-react": "^0.309.0",
     "class-variance-authority": "^0.7.0",
     "clsx": "^2.1.0",
